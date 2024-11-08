@@ -26,6 +26,19 @@ rosSelf: rosSuper: with rosSelf.lib; {
     hash = "sha256-GpzGMpQ02s/X/XEcGoozzMjigrbqvAu81bcb7QG+36E=";
   };
 
+  mrt-cmake-modules = rosSuper.mrt-cmake-modules.overrideAttrs ({
+    patches ? [], ...
+    }: {
+      patches = patches ++ [ (self.fetchpatch {
+        url = "https://github.com/KIT-MRT/mrt_cmake_modules/commit/15d2ff0f033bbfc786812a0305fe50711a3dbab7.patch";
+        hash = "sha256-pKxw6f0LSXilumT1iDyiG0+0gbt1RiO2xYP01FIhjqw=";
+      })];
+  });
+
+  lanelet2-projection = (rosSuper.lanelet2-projection.overrideAttrs ({nativeBuildInputs ? [], ...}: {
+    nativeBuildInputs = nativeBuildInputs ++ [ self.pkg-config ];
+  }));
+
   mapviz = rosSuper.mapviz.overrideAttrs ({
     patches ? [], ...
   }: {
